@@ -1,5 +1,6 @@
 ﻿using System;
 using static BuilderLab.Vehicle;
+using Color = BuilderLab.Vehicle.Color;
 
 namespace BuilderLab
 {
