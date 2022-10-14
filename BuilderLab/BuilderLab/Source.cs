@@ -3,7 +3,6 @@
 * South Hills Username: [YOUR SOUTH HILLS USERNAME HERE]
 */
 using System;
-using System.Drawing;
 using static BuilderLab.Vehicle;
 
 namespace BuilderLab

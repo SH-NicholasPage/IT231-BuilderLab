@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static BuilderLab.Vehicle;
 
 namespace BuilderLab
 {
@@ -137,10 +137,7 @@ namespace BuilderLab
             JsonSerializerOptions options = new JsonSerializerOptions
             { 
                 WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                Converters = {
-                    new ColorJsonConverter()
-                }
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
 
             String text = JsonSerializer.Serialize(Vehicles, options);
@@ -155,13 +152,5 @@ namespace BuilderLab
 
             return score;
         }
-    }
-
-    public class ColorJsonConverter : JsonConverter<Color>
-    {
-        public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => ColorTranslator.FromHtml(reader.GetString()!);
-
-        public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options) =>
-            writer.WriteStringValue("#" + value.R.ToString("X2") + value.G.ToString("X2") + value.B.ToString("X2"));
     }
 }
