@@ -35,7 +35,7 @@ namespace BuilderLab
         public TransmissionType? Transmission { get; set; } = null;
         public int? NumberOfDoors { get; set; } = null;
         public int? NumberOfWheels { get; set; } = null;
-        public FuelType? CarFuelType { get; set; } = null;
+        public FuelType? VehicleFuelType { get; set; } = null;
         public SeatMaterial? SeatMat { get; set; } = null;
         public int? NumberOfSeats { get; set; } = null;
         public Color? BodyColor { get; set; } = null;

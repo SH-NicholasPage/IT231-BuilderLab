@@ -20,7 +20,7 @@ namespace BuilderLab
         }
 
         /// <summary>
-        /// Returns a car with a V6 engine, automatic transmission, vinyl seats, 4 wheels, 6 doors, 7 seats, blue body, uses gasoline, has a radio, and has Bluetooth.
+        /// Returns a car with a V8 engine, automatic transmission, 7 vinyl seats, 4 wheels, 6 doors, blue body, uses gasoline, has a radio, and has Bluetooth.
         /// </summary>
         public Vehicle Car2()
         {
@@ -44,7 +44,7 @@ namespace BuilderLab
         }
 
         /// <summary>
-        /// Returns a motorcycle with a V2 engine, manual transmission, 2 wheels, a leather seat, black body, and has a radio
+        /// Returns a motorcycle with a V2 engine, manual transmission, 2 wheels, a leather seat, black body, has a radio, and uses gasoline.
         /// </summary>
         public Vehicle Motorcycle()
         {
