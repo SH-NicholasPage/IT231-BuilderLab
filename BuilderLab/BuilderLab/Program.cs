@@ -12,7 +12,7 @@ namespace BuilderLab
 {
     public class Program
     {
-        private const int MAX_SCORE = 20;
+        private const int MAX_SCORE = 18;
         private static List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
 
         public static void Main()
