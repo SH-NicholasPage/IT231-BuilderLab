@@ -7,4 +7,10 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="inputs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

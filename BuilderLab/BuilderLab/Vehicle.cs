@@ -1,10 +1,9 @@
 ﻿//DO NOT MODIFY THIS FILE!
 using System;
-using System.Drawing;
 
 namespace BuilderLab
 {
-    public class Vehicle
+    public class Vehicle : IEquatable<Vehicle>
     {
         public enum EngineType
         {
@@ -31,6 +30,11 @@ namespace BuilderLab
             Electric
         }
 
+        public enum Color
+        {
+            White, Black, Yellow, Green, Blue, Red
+        }
+
         public EngineType? Engine { get; set; } = null;
         public TransmissionType? Transmission { get; set; } = null;
         public int? NumberOfDoors { get; set; } = null;
@@ -43,5 +47,13 @@ namespace BuilderLab
         public bool? HasBluetooth { get; set; } = null;
         public bool? HasMudFlaps { get; set; } = null;
         public bool? HasTrailer { get; set; } = null;
+
+        public bool Equals(Vehicle? other)
+        {
+            return other != null && this.Engine == other.Engine && this.Transmission == other.Transmission && this.NumberOfDoors == other.NumberOfDoors &&
+                this.NumberOfWheels == other.NumberOfWheels && this.VehicleFuelType == other.VehicleFuelType && this.SeatMat == other.SeatMat &&
+                this.NumberOfSeats == other.NumberOfSeats && this.BodyColor == other.BodyColor && this.HasRadio == other.HasRadio &&
+                this.HasBluetooth == other.HasBluetooth && this.HasMudFlaps == other.HasMudFlaps && this.HasTrailer == other.HasTrailer;
+        }
     }
 }

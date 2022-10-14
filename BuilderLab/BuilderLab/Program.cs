@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using static BuilderLab.Vehicle;
+using static System.Formats.Asn1.AsnWriter;
+using Color = BuilderLab.Vehicle.Color;
 
 namespace BuilderLab
 {
@@ -13,141 +17,162 @@ namespace BuilderLab
 
         public static void Main()
         {
-            ConstructVehicles();
+            LoadVehicles();
+            float score = RunTests();
+
+            Console.WriteLine("*** Score: " + Math.Round(score, 2) + "/" + MAX_SCORE);
         }
-        private static void ConstructVehicles()
+        private static void LoadVehicles()
         {
-            // Returns a car with a V4 engine, manual transmission, 4 wheels, 4 doors, 5 leather seats, white body, and uses gasoline.
-            Vehicles.Add(new Vehicle() 
-            { 
-                Engine = Vehicle.EngineType.V4,
-                Transmission = Vehicle.TransmissionType.Manual,
-                NumberOfWheels = 4,
-                NumberOfDoors = 4,
-                NumberOfSeats = 5,
-                SeatMat = Vehicle.SeatMaterial.Leather,
-                BodyColor = Color.White,
-                VehicleFuelType = Vehicle.FuelType.Gasoline
-            });
-            // Returns a car with a V8 engine, automatic transmission, 7 vinyl seats, 4 wheels, 6 doors, blue body, uses gasoline, has a radio, and has Bluetooth.
-            Vehicles.Add(new Vehicle()
+            if (File.Exists("inputs.json") == false)
             {
-                Engine = Vehicle.EngineType.V8,
-                Transmission = Vehicle.TransmissionType.Automatic,
-                NumberOfWheels = 4,
-                NumberOfDoors = 6,
-                NumberOfSeats = 7,
-                SeatMat = Vehicle.SeatMaterial.Vinyl,
-                BodyColor = Color.Blue,
-                VehicleFuelType = Vehicle.FuelType.Gasoline,
-                HasRadio = true,
-                HasBluetooth = true
-            });
-            // Returns a car with a specified transmission type, two doors, four wheels, two nylon seats, white body, has a radio, and uses electric fuel.
-            Vehicles.Add(new Vehicle()
-            {
-                NumberOfWheels = 4,
-                NumberOfDoors = 2,
-                NumberOfSeats = 2,
-                SeatMat = Vehicle.SeatMaterial.Nylon,
-                BodyColor = Color.White,
-                VehicleFuelType = Vehicle.FuelType.Electric,
-                HasRadio = true,
-                HasBluetooth = true
-            });
-            // Returns a car with an automatic transmission, X doors, Y wheels, Z nylon seats, white body, has a radio, and uses electric fuel.
-            Vehicles.Add(new Vehicle()
-            {
-                Transmission = Vehicle.TransmissionType.Automatic,
-                SeatMat = Vehicle.SeatMaterial.Nylon,
-                BodyColor = Color.White,
-                VehicleFuelType = Vehicle.FuelType.Electric,
-                HasRadio = true
-            });
-            // Returns a motorcycle with a V2 engine, manual transmission, 2 wheels, a leather seat, black body, has a radio, and uses gasoline.
-            Vehicles.Add(new Vehicle()
-            {
-                Engine = Vehicle.EngineType.V2,
-                Transmission = Vehicle.TransmissionType.Manual,
-                NumberOfWheels = 2,
-                NumberOfSeats = 1,
-                SeatMat = Vehicle.SeatMaterial.Leather,
-                BodyColor = Color.Black,
-                VehicleFuelType = Vehicle.FuelType.Gasoline,
-                HasRadio = true
-            });
-            // Returns a scooter with 2 wheels, a vinyl seat, a yellow body, uses electric fuel, has a radio, and has bluetooth
-            Vehicles.Add(new Vehicle()
-            {
-                NumberOfWheels = 2,
-                NumberOfSeats = 1,
-                SeatMat = Vehicle.SeatMaterial.Vinyl,
-                BodyColor = Color.Yellow,
-                VehicleFuelType = Vehicle.FuelType.Electric,
-                HasRadio = true,
-                HasBluetooth = true
-            });
-            // Returns a truck with a V16 engine, manual transmission, 2 doors, 16 wheels, diesel fuel, 2 nylon seats, red body color, and has a radio, trailer, and bluetooth.
-            Vehicles.Add(new Vehicle()
-            {
-                Engine = Vehicle.EngineType.V16,
-                Transmission = Vehicle.TransmissionType.Manual,
-                NumberOfDoors = 2,
-                NumberOfWheels = 16,
-                NumberOfSeats = 2,
-                SeatMat = Vehicle.SeatMaterial.Nylon,
-                BodyColor = Color.Red,
-                VehicleFuelType = Vehicle.FuelType.Diesel,
-                HasRadio = true,
-                HasBluetooth = true,
-                HasTrailer = true
-            });
-            // Returns a truck with a V18 engine, manual transmission, 4 doors, 18 wheels, diesel fuel, 3 polyester seats, green body color, and has a radio, a trailer, and mudflaps.
-            Vehicles.Add(new Vehicle()
-            {
-                Engine = Vehicle.EngineType.V18,
-                Transmission = Vehicle.TransmissionType.Manual,
-                NumberOfDoors = 4,
-                NumberOfWheels = 18,
-                NumberOfSeats = 3,
-                SeatMat = Vehicle.SeatMaterial.Polyester,
-                BodyColor = Color.Green,
-                VehicleFuelType = Vehicle.FuelType.Diesel,
-                HasRadio = true,
-                HasMudFlaps = true,
-                HasTrailer = true
-            });
-            // Returns a truck with an automatic transmission, 2 doors, 12 wheels, electric fuel, 3 leather seats, white body color, and has a radio and bluetooth
-            Vehicles.Add(new Vehicle()
-            {
-                Transmission = Vehicle.TransmissionType.Automatic,
-                NumberOfDoors = 2,
-                NumberOfWheels = 12,
-                NumberOfSeats = 3,
-                SeatMat = Vehicle.SeatMaterial.Leather,
-                BodyColor = Color.White,
-                VehicleFuelType = Vehicle.FuelType.Electric,
-                HasRadio = true,
-                HasBluetooth = true
-            });
+                Console.Error.WriteLine("ERROR: Could not find input file!");
+                Environment.Exit(1);
+            }
 
-            JsonSerializerOptions options = new JsonSerializerOptions
-            { 
-                WriteIndented = true,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-            };
-
-            String text = JsonSerializer.Serialize(Vehicles, options);
-            File.WriteAllText("inputs.json", text);
+            Vehicles = JsonSerializer.Deserialize<List<Vehicle>>(File.ReadAllText("inputs.json"))!;
         }
 
-        private static int RunTests()
+        private static float RunTests()
         {
-            int score = MAX_SCORE;
+            float score = MAX_SCORE;
+            float decrementAmount = (float)MAX_SCORE / Vehicles.Count;
+            Source source = new Source();
 
+            score -= (TestProtected(source.Car1, Vehicles[0]) == false) ? decrementAmount : 0;
+            score -= (TestProtected(source.Car2, Vehicles[1]) == false) ? decrementAmount : 0;
 
+            Vehicles[2].Transmission = GenerateRandomTransmissionType();
+
+            try
+            {
+                if (source.Car3(Vehicles[2].Transmission!.Value).Equals(Vehicles[2]) == false)
+                {
+                    score -= decrementAmount;
+                    Console.Error.WriteLine("Error: Method 'Car3()' returned an incorrect object.");
+                }
+            }
+            catch (Exception ex) when (ex is NotImplementedException == false) 
+            { 
+                Console.Error.WriteLine("Error: Method 'Car3()' threw an exception."); 
+                score -= decrementAmount; 
+            }
+
+            Vehicles[3].NumberOfWheels = GenerateRandomNumberOfWheels();
+            Vehicles[3].NumberOfDoors = GenerateRandomNumberOfDoors();
+            Vehicles[3].NumberOfSeats = GenerateRandomNumberOfSeats();
+
+            try
+            {
+                if (source.Car4(Vehicles[3].NumberOfDoors!.Value, Vehicles[3].NumberOfWheels!.Value, Vehicles[3].NumberOfSeats!.Value).Equals(Vehicles[3]) == false)
+                {
+                    score -= decrementAmount;
+                    Console.Error.WriteLine("Error: Method 'Car4()' returned an incorrect object.");
+                }
+            }
+            catch (Exception ex) when (ex is NotImplementedException == false) 
+            { 
+                Console.Error.WriteLine("Error: Method 'Car4()' threw an exception."); 
+                score -= decrementAmount; 
+            }
+
+            score -= (TestProtected(source.Motorcycle, Vehicles[4]) == false) ? decrementAmount : 0;
+            score -= (TestProtected(source.Scooter, Vehicles[5]) == false) ? decrementAmount : 0;
+            score -= (TestProtected(source.Truck1, Vehicles[6]) == false) ? decrementAmount : 0;
+
+            Vehicles[7].Engine = GenerateRandomEngineType();
+
+            try
+            {
+                if (source.Truck2(Vehicles[7].Engine!.Value).Equals(Vehicles[7]) == false)
+                {
+                    score -= decrementAmount;
+                    Console.Error.WriteLine("Error: Method 'Truck2()' returned an incorrect object.");
+                }
+            }
+            catch (Exception ex) when (ex is NotImplementedException == false)
+            {
+                Console.Error.WriteLine("Error: Method 'Truck2()' threw an exception.");
+                score -= decrementAmount;
+            }
+
+            score -= (TestProtected(source.Truck3, Vehicles[8]) == false) ? decrementAmount : 0;
+
+            Vehicles[9].NumberOfWheels = GenerateRandomNumberOfWheels();
+            Vehicles[9].NumberOfSeats = GenerateRandomNumberOfSeats();
+            Vehicles[9].BodyColor = GenerateRandomColor();
+            Vehicles[9].VehicleFuelType = GenerateRandomFuelType();
+
+            try
+            {
+                if (source.GolfCart(Vehicles[9].NumberOfWheels!.Value, Vehicles[9].NumberOfSeats!.Value, Vehicles[9].BodyColor!.Value, Vehicles[9].VehicleFuelType!.Value).Equals(Vehicles[9]) == false)
+                {
+                    score -= decrementAmount;
+                    Console.Error.WriteLine("Error: Method 'GolfCart()' returned an incorrect object.");
+                }
+            }
+            catch (Exception ex) when (ex is NotImplementedException == false)
+            {
+                Console.Error.WriteLine("Error: Method 'GolfCart()' threw an exception.");
+                score -= decrementAmount;
+            }
 
             return score;
+        }
+
+        private static bool TestProtected(Func<Vehicle> vehicleGet, Vehicle testAgainst)
+        {
+            try
+            {
+                if (vehicleGet().Equals(testAgainst) == false)
+                {
+                    Console.Error.WriteLine("Error: Method '" + vehicleGet.Method.Name + "' returned an incorrect object.");
+                    return false;
+                }
+            }
+            catch (Exception ex) when (ex is NotImplementedException == false)
+            {
+                Console.Error.WriteLine("Error: Method '" + vehicleGet.Method.Name + "' threw an exception.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static EngineType GenerateRandomEngineType()
+        {
+            return (EngineType)Random.Shared.Next(2, Enum.GetNames(typeof(EngineType)).Length - 1);
+        }
+
+        private static TransmissionType GenerateRandomTransmissionType()
+        {
+            return (TransmissionType)Random.Shared.Next(0, Enum.GetNames(typeof(TransmissionType)).Length - 1);
+        }
+
+        private static FuelType GenerateRandomFuelType()
+        {
+            return (FuelType)Random.Shared.Next(0, Enum.GetNames(typeof(FuelType)).Length - 1);
+        }
+
+        private static int GenerateRandomNumberOfDoors()
+        {
+            return Random.Shared.Next(1, 5) * 2;
+        }
+
+        private static int GenerateRandomNumberOfWheels()
+        {
+            return Random.Shared.Next(2, 10) * 2;
+        }
+
+        private static int GenerateRandomNumberOfSeats()
+        {
+            return Random.Shared.Next(2, 9);
+        }
+
+        private static Color GenerateRandomColor()
+        {
+            return (Color)Random.Shared.Next(0, Enum.GetNames(typeof(Color)).Length - 1);
+
         }
     }
 }

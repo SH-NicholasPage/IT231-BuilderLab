@@ -3,8 +3,8 @@
 * South Hills Username: [YOUR SOUTH HILLS USERNAME HERE]
 */
 using System;
-using System.Drawing;
 using static BuilderLab.Vehicle;
+using Color = BuilderLab.Vehicle.Color;
 
 namespace BuilderLab
 {
@@ -68,9 +68,9 @@ namespace BuilderLab
         }
 
         /// <summary>
-        /// Returns a truck with a V18 engine, manual transmission, 4 doors, 18 wheels, diesel fuel, 3 polyester seats, green body color, and has a radio, a trailer, and mudflaps.
+        /// Returns a truck with a specified engine type, manual transmission, 4 doors, 18 wheels, diesel fuel, 3 polyester seats, green body color, and has a radio, a trailer, and mudflaps.
         /// </summary>
-        public Vehicle Truck2()
+        public Vehicle Truck2(EngineType engineType)
         {
             throw new NotImplementedException();
         }
