@@ -130,6 +130,8 @@ namespace BuilderLab
                 HasRadio = true,
                 HasBluetooth = true
             });
+            // Returns a golf cart with given arguments
+            Vehicles.Add(new Vehicle());
 
             JsonSerializerOptions options = new JsonSerializerOptions
             { 
