@@ -55,5 +55,20 @@ namespace BuilderLab
                 this.NumberOfSeats == other.NumberOfSeats && this.BodyColor == other.BodyColor && this.HasRadio == other.HasRadio &&
                 this.HasBluetooth == other.HasBluetooth && this.HasMudFlaps == other.HasMudFlaps && this.HasTrailer == other.HasTrailer;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if(obj == null)
+            {
+                return false;
+            }
+
+            if(obj.GetType() == typeof(Vehicle))
+            {
+                return Equals(obj as Vehicle);
+            }
+
+            return false;
+        }
     }
 }
