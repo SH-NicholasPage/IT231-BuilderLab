@@ -28,8 +28,7 @@
     "SeatMat": 3,
     "NumberOfSeats": 2,
     "BodyColor": 0,
-    "HasRadio": true,
-    "HasBluetooth": true
+    "HasRadio": true
   },
   {
     "Transmission": 1,
