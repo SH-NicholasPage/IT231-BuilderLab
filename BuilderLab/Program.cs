@@ -12,8 +12,8 @@ namespace BuilderLab
 {
     public class Program
     {
-        private const int MAX_SCORE = 18;
-        private static List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        private const float MAX_SCORE = 10f;
+        private static List<Vehicle> Vehicles { get; set; } = [];
 
         public static void Main()
         {
@@ -36,7 +36,7 @@ namespace BuilderLab
         private static float RunTests()
         {
             float score = MAX_SCORE;
-            float decrementAmount = (float)MAX_SCORE / Vehicles.Count;
+            float decrementAmount = MAX_SCORE / Vehicles.Count;
             Source source = new Source();
 
             score -= (TestProtected(source.Car1, Vehicles[0]) == false) ? decrementAmount : 0;
