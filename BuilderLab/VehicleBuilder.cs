@@ -2,10 +2,9 @@
 using static BuilderLab.Vehicle;
 using Color = BuilderLab.Vehicle.Color;
 
-namespace BuilderLab
+namespace BuilderLab;
+
+public class VehicleBuilder
 {
-    public class VehicleBuilder
-    {
-        //TODO: Implement your builder methods
-    }
+    //TODO: Implement your builder methods
 }
